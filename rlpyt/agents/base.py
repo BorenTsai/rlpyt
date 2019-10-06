@@ -62,7 +62,7 @@ class BaseAgent:
             self.model = self.ModelCls(**self.env_model_kwargs,
                 **self.model_kwargs)
             self.model.load_state_dict(self.shared_model.state_dict())
-        self.device = torch.device("cuda", index=cuda_idx)
+        self.device = torch.device("cuda", index=0)
         self.model.to(self.device)
         logger.log(f"Initialized agent model on device: {self.device}.")
 
