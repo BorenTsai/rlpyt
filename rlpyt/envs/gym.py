@@ -5,6 +5,7 @@ from gym import Wrapper
 from gym.wrappers.time_limit import TimeLimit
 from collections import namedtuple
 
+from emergence.envs.bolt.bolt_env import Bolt
 from rlpyt.envs.base import EnvSpaces, EnvStep
 from rlpyt.spaces.gym_wrapper import GymSpaceWrapper
 from rlpyt.utils.collections import is_namedtuple_class
@@ -127,7 +128,7 @@ def infill_info(info, sometimes_info):
 
 def make(*args, info_example=None, **kwargs):
     if info_example is None:
-        return GymEnvWrapper(gym.make(*args, **kwargs))
+        return GymEnvWrapper(gym.make(*args, **kwargs))#Bolt(num_agents=10, num_obstacles=3))
     else:
         return GymEnvWrapper(EnvInfoWrapper(
             gym.make(*args, **kwargs), info_example))

@@ -1,28 +1,28 @@
-
 from rlpyt.utils.launching.affinity import encode_affinity
 from rlpyt.utils.launching.exp_launcher import run_experiments
 from rlpyt.utils.launching.variant import make_variants, VariantLevel
 
-script = "rlpyt/experiments/scripts/mujoco/pg/train/mujoco_ff_ppo_cpu.py"
+script = "rlpyt/experiments/scripts/mujoco/pg/train/mujoco_ff_vime_cpu.py"
 affinity_code = encode_affinity(
     n_cpu_core=2,
     n_gpu=0,
     hyperthread_offset=2,
     n_socket=1,
-    cpu_per_run=2,
+    cpu_per_run=2
 )
+
 runs_per_setting = 1
-default_config_key = "ppo_1M_cpu"
+default_config_key = "vime_1M_cpu"
 experiment_title = "first_test_mujoco"
 variant_levels = list()
 
-env_ids = ["Swimmer-v3"]  # , "Swimmer-v3"]
+env_ids = ["Bolt"]
 values = list(zip(env_ids))
 dir_names = ["env_{}".format(*v) for v in values]
 keys = [("env", "id")]
 variant_levels.append(VariantLevel(keys, values, dir_names))
 
-variants, log_dirs = make_variants(*variant_levels)
+variant, log_dirs = make_variants(*variant_levels)
 
 run_experiments(
     script=script,
@@ -31,5 +31,5 @@ run_experiments(
     runs_per_setting=runs_per_setting,
     variants=variants,
     log_dirs=log_dirs,
-    common_args=(default_config_key,),
+    common_args(default_config_key,),
 )
