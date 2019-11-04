@@ -22,7 +22,7 @@ dir_names = ["env_{}".format(*v) for v in values]
 keys = [("env", "id")]
 variant_levels.append(VariantLevel(keys, values, dir_names))
 
-variant, log_dirs = make_variants(*variant_levels)
+variants, log_dirs = make_variants(*variant_levels)
 
 run_experiments(
     script=script,
@@ -31,5 +31,5 @@ run_experiments(
     runs_per_setting=runs_per_setting,
     variants=variants,
     log_dirs=log_dirs,
-    common_args(default_config_key,),
-)
+    common_args=(default_config_key,),
+)       

@@ -15,8 +15,21 @@ class VIME(PolicyGradientAlgo):
 
     def __init__(
             self,
-            OptimCls,
-            optimizer_args=None,
+            OptimCls=torch.optim.Adam,
+            discount=0.99,
+            learning_rate=1e-3,
+            value_loss_coeff=1,
+            entropy_loss_coeff=0.01,
+            optim_kwargs=None,
+            clip_grad_norm=1,
+            inital_optim_state_dict=None,
+            gae_lambda=1,
+            minibatches=4,
+            epochs=4,
+            ratio_clip=0.1,
+            linear_lr_schedule=True,
+            normalize_advantage=False,
+            bootstrap_timelimit=0,
             step_size=1e-2):
         save__init__args(locals())
 
@@ -42,7 +55,7 @@ class VIME(PolicyGradientAlgo):
 
         loss_inputs = LossInputs(
             agent_inputs=agent_inputs,
-            action=samples, agent.action,
+            action=samples.agent.action,
             return_=return_,
             advantage=advantage,
             valid=valid,
@@ -52,7 +65,7 @@ class VIME(PolicyGradientAlgo):
         if recurrent:
             init_rnn_state = samples.agent.agent_info.prev_rnn_state[0]
         T, B = samples.env.reward.shape[:2]
-        opt_info = OptInfo(*[] for _ in range(len(OptInfo._fields)))
+        opt_info = OptInfo(*([] for _ in range(len(OptInfo._fields))))
 
         batch_size = B if self.agent.recurrent else T * B
         mb_size = batch_size // self.minibatches
