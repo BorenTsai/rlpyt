@@ -127,8 +127,12 @@ def infill_info(info, sometimes_info):
 
 
 def make(*args, info_example=None, **kwargs):
+    for arg in args:
+        print("ARGS", arg)
+    for kwarg in kwargs:
+        print("KWARGS", kwarg)
     if info_example is None:
-        return GymEnvWrapper(gym.make(*args, **kwargs))#Bolt(num_agents=10, num_obstacles=3))
+        return GymEnvWrapper(Bolt(num_agents=5, num_obstacles=0))#gym.make(*args, **kwargs))#Bolt(num_agents=10, num_obstacles=3))
     else:
         return GymEnvWrapper(EnvInfoWrapper(
             gym.make(*args, **kwargs), info_example))

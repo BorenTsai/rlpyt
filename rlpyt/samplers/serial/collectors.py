@@ -47,7 +47,7 @@ class SerialEvalCollector(BaseEvalCollector):
                     agent_info[b], env_info)
                 if getattr(env_info, "traj_done", d):
                     completed_traj_infos.append(traj_infos[b].terminate(o))
-                    traj_infos[b] = self.TrajInfoCls()
+                    traj_infos[b] = self.TrajInfoCls(include_observations=include_observations)
                     o = env.reset()
                 if d:
                     action[b] = 0  # Prev_action for next step.

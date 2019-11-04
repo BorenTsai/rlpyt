@@ -17,12 +17,12 @@ class VIME(PolicyGradientAlgo):
             self,
             OptimCls=torch.optim.Adam,
             discount=0.99,
-            learning_rate=1e-3,
+            learning_rate=0.001,
             value_loss_coeff=1,
             entropy_loss_coeff=0.01,
             optim_kwargs=None,
             clip_grad_norm=1,
-            inital_optim_state_dict=None,
+            initial_optim_state_dict=None,
             gae_lambda=1,
             minibatches=4,
             epochs=4,
@@ -75,7 +75,7 @@ class VIME(PolicyGradientAlgo):
                 T_idxs = slice(None) if recurrent else idxs % T
                 B_idxs = idxs if recurrent else idxs // T
                 self.optimizer.zero_grad()
-                rnn_rate = init_rnn_state[B_idxs] if recurrent else None
+                rnn_state = init_rnn_state[B_idxs] if recurrent else None
 
                 loss, entropy, perplexity = self.loss(
                     *loss_inputs[T_idxs, B_idxs], rnn_state)
@@ -90,7 +90,7 @@ class VIME(PolicyGradientAlgo):
                 opt_info.perplexity.append(perplexity.item())
         if self.linear_lr_schedule:
             self.lr_scheduler.step()
-            self.ratio_clip = self._ratio_clip * (self.n_tr - itr) / self.n_itr
+            self.ratio_clip = self._ratio_clip * (self.n_itr - itr) / self.n_itr
 
         return opt_info
 
@@ -116,7 +116,7 @@ class VIME(PolicyGradientAlgo):
             surr_loss = -valid_mean(lr * advantage)
 
         loss = surr_loss
-        entropy = dist.entropy(dist_info, valid)
+        entropy = dist.mean_entropy(dist_info, valid)
         perplexity = dist.mean_perplexity(dist_info, valid)
 
         return loss, entropy, perplexity

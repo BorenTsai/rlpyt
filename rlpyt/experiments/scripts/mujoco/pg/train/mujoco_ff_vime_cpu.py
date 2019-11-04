@@ -35,7 +35,7 @@ def build_and_train(slot_affinity_code, log_dir, run_ID, config_key):
         **config["runner"]
     )
     name = config["env"]["id"]
-    with logger_context(log_dir, run_ID, name, config):
+    with logger_context(log_dir, run_ID, name, config, snapshot_mode='last'):
         runner.train()
 
 if __name__ == "__main__":

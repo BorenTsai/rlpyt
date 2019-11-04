@@ -13,10 +13,10 @@ affinity_code = encode_affinity(
 )
 runs_per_setting = 1
 default_config_key = "ppo_1M_cpu"
-experiment_title = "first_test_mujoco"
+experiment_title = "bolt_ppo_sanity"
 variant_levels = list()
 
-env_ids = ["Swimmer-v3"]  # , "Swimmer-v3"]
+env_ids = ["Bolt"]  # , "Swimmer-v3"]
 values = list(zip(env_ids))
 dir_names = ["env_{}".format(*v) for v in values]
 keys = [("env", "id")]
