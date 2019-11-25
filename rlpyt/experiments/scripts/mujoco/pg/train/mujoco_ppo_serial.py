@@ -7,7 +7,7 @@ from rlpyt.samplers.parallel.cpu.collectors import CpuResetCollector
 from rlpyt.envs.gym import make as gym_make
 from rlpyt.algos.pg.ppo import PPO
 from rlpyt.agents.pg.mujoco import MujocoFfAgent
-from rlpyt.runners.minibatch_rl import MinibatchRl
+from rlpyt.runners.minibatch_rl import MinibatchRl, MinibatchRlEval
 from rlpyt.utils.logging.context import logger_context
 from rlpyt.utils.launching.variant import load_variant, update_config
 
@@ -28,7 +28,7 @@ def build_and_train(slot_affinity_code, log_dir, run_ID, config_key):
     )
     algo = PPO(optim_kwargs=config["optim"], **config["algo"])
     agent = MujocoFfAgent(model_kwargs=config["model"], **config["agent"])
-    runner = MinibatchRl(
+    runner = MinibatchRlEval(
         algo=algo,
         agent=agent,
         sampler=sampler,

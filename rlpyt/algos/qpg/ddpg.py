@@ -121,6 +121,8 @@ class DDPG(RlAlgorithm):
             return opt_info
         for _ in range(self.updates_per_optimize):
             samples_from_replay = self.replay_buffer.sample_batch(self.batch_size)
+            import ipdb; ipdb.set_trace()
+            
             if self.mid_batch_reset and not self.agent.recurrent:
                 valid = torch.ones_like(samples_from_replay.done, dtype=torch.float)
             else:
@@ -150,6 +152,7 @@ class DDPG(RlAlgorithm):
             if self.update_counter % self.target_update_interval == 0:
                 self.agent.update_target(self.target_update_tau)
         return opt_info
+
 
     def samples_to_buffer(self, samples):
         return SamplesToBuffer(

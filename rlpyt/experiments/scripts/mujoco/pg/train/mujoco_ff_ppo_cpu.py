@@ -7,7 +7,7 @@ from rlpyt.samplers.parallel.cpu.collectors import CpuResetCollector
 from rlpyt.envs.gym import make as gym_make
 from rlpyt.algos.pg.ppo import PPO
 from rlpyt.agents.pg.mujoco import MujocoFfAgent
-from rlpyt.runners.minibatch_rl import MinibatchRl
+from rlpyt.runners.minibatch_rl import MinibatchRl, MinibatchRlEval
 from rlpyt.utils.logging.context import logger_context
 from rlpyt.utils.launching.variant import load_variant, update_config
 
@@ -38,7 +38,7 @@ def build_and_train(slot_affinity_code, log_dir, run_ID, config_key):
         **config["runner"]
     )
     name = config["env"]["id"]
-    with logger_context(log_dir, run_ID, name, config):
+    with logger_context(log_dir, run_ID, name, config, snapshot_mode="all"): 
         runner.train()
 
 

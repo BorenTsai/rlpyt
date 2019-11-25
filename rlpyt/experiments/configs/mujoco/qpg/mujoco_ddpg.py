@@ -36,6 +36,7 @@ config = dict(
 )
 
 configs["ddpg_from_td3_1M_serial"] = config
+configs['ddpg_from_td3_1M'] = config
 
 config = copy.deepcopy(configs["ddpg_from_td3_1M_serial"])
 config["algo"]["bootstrap_timelimit"] = True

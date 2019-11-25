@@ -13,7 +13,7 @@ affinity_code = encode_affinity(
 )
 runs_per_setting = 1
 default_config_key = "ppo_1M_cpu"
-experiment_title = "bolt_ppo_sanity"
+experiment_title = "bolt_ppo_sanity_0"
 variant_levels = list()
 
 env_ids = ["Bolt"]  # , "Swimmer-v3"]

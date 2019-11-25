@@ -141,7 +141,7 @@ class ParallelSamplerBase(BaseSampler):
 
     def _build_buffers(self, env, bootstrap_value):
         self.samples_pyt, self.samples_np, examples = build_samples_buffer(
-            self.agent, env, self.batch_spec, bootstrap_value,
+            self.agent, env, self.batch_spec, bootstrap_value, 
             agent_shared=True, env_shared=True, subprocess=True)
         return examples
 

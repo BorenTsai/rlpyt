@@ -48,11 +48,12 @@ def sampling_process(common_kwargs, worker_kwargs):
         global_B=c.get("global_B", 1),
         env_ranks=w.get("env_ranks", None),
     )
+
     agent_inputs, traj_infos = collector.start_envs(c.max_decorrelation_steps)
     collector.start_agent()
 
     if c.get("eval_n_envs", 0) > 0:
-        eval_envs = [c.EnvCls(**c.eval_env_kwargs) for _ in range(c.eval_n_envs)]
+        eval_envs = [c.EnvCls(**c.env_kwargs) for _ in range(c.eval_n_envs)]
         eval_collector = c.eval_CollectorCls(
             rank=w.rank,
             envs=eval_envs,
@@ -62,7 +63,7 @@ def sampling_process(common_kwargs, worker_kwargs):
             agent=c.get("agent", None),
             sync=w.get("sync", None),
             step_buffer_np=w.get("eval_step_buffer_np", None),
-        )
+            )
     else:
         eval_envs = list()
 
@@ -73,8 +74,9 @@ def sampling_process(common_kwargs, worker_kwargs):
         ctrl.barrier_in.wait()
         if ctrl.quit.value:
             break
-        if ctrl.do_eval.value:
-            eval_collector.collect_evaluation(ctrl.itr.value)  # Traj_infos to queue inside.
+        # if ctrl.do_eval.value:
+        #     print("PASS")
+        #     eval_collector.collect_evaluation(ctrl.itr.value)  # Traj_infos to queue inside.
         else:
             agent_inputs, traj_infos, completed_infos = collector.collect_batch(
                 agent_inputs, traj_infos, ctrl.itr.value)

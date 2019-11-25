@@ -5,11 +5,11 @@ from rlpyt.utils.launching.variant import make_variants, VariantLevel
 
 script = "rlpyt/experiments/scripts/mujoco/qpg/train/mujoco_ddpg_cpu.py"
 affinity_code = encode_affinity(
-    n_cpu_core=2,
+    n_cpu_core=1,
     n_gpu=0,
-    hyperthread_offset=2,
+    hyperthread_offset=1,
     n_socket=1,
-    cpu_per_run=2,
+    cpu_per_run=1,
 )
 runs_per_setting = 1
 default_config_key = "ddpg_from_td3_1M"

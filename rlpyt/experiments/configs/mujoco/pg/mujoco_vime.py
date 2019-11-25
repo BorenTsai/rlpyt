@@ -12,7 +12,7 @@ config = dict(
         entropy_loss_coeff=0.0,
         gae_lambda=0.95,
         minibatches=32,
-        epochs=10,
+        epochs=500,
         normalize_advantage=True,
     ),
 
@@ -21,7 +21,7 @@ config = dict(
     model=dict(),
     optim=dict(),
     runner=dict(
-        n_steps=5e5,
+        n_steps=10e10,
         log_interval_steps=1e4
     ),
 

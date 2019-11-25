@@ -192,7 +192,7 @@ class MinibatchRl(MinibatchRlBase):
             with logger.prefix(f"itr #{itr} "):
                 self.agent.sample_mode(itr)  # Might not be this agent sampling.
                 samples, traj_infos = self.sampler.obtain_samples(itr)
-                self.agent.train_mode(itr)
+                self.agent.train_mode(itr) 
                 opt_info = self.algo.optimize_agent(itr, samples)
                 self.store_diagnostics(itr, traj_infos, opt_info)
                 if (itr + 1) % self.log_interval_itrs == 0:
@@ -234,6 +234,7 @@ class MinibatchRlEval(MinibatchRlBase):
             with logger.prefix(f"itr #{itr} "):
                 self.agent.sample_mode(itr)
                 samples, traj_infos = self.sampler.obtain_samples(itr)
+                import ipdb; ipdb.set_trace();
                 self.agent.train_mode(itr)
                 opt_info = self.algo.optimize_agent(itr, samples)
                 self.store_diagnostics(itr, traj_infos, opt_info)
@@ -266,3 +267,39 @@ class MinibatchRlEval(MinibatchRlBase):
         self._cum_eval_time += eval_time
         logger.record_tabular('CumEvalTime', self._cum_eval_time)
         super().log_diagnostics(itr, eval_traj_infos, eval_time)
+
+class MinibatchRlHER(MinibatchRlBase):
+
+    def train(self):
+        n_itr = self.startup()
+        with logger.prefix(f"itr #0 "):
+            eval_traj_infos, eval_time = self.evaluate_agent(0)
+            self.log_diagnostics(0, eval_traf_infos, eval_time)
+        for itr in range(n_itr):
+            with logger.prefix(f"itr #{itr} "):
+                self.agent.sample_mode(itr)
+                samples, traj_infos = self.sampler.obtain_samples(itr)
+                self.agent.train_mode(itr)
+
+    def initialize_logging(self):
+        self._traj_infos = deque(maxlen=self.log_traj_window)
+        self._new_completed_trajs = 0
+        logger.log(f"Optimizing over {self.log_interval_itrs} iterations.")
+        super().initialize_logging()
+        self.pbar = ProgBarCounter(self.log_interval_itrs)
+
+    def store_diagnostics(self, itr, traj_infos, opt_info):
+        self._new_completed_trajs += len(traj_infos)
+        self._traj_infos.extend(traj_infos)
+        super().store_diagnostics(itr, traj_infos, opt_info)
+
+    def log_diagnostics(self, itr):
+        logger.record_tabular('NewCompletedTrajs', self._new_completed_trajs)
+        logger.record_tabular('StepsInTrajWindow',
+            sum(info["Length"] for info in self._traj_infos))
+        super().log_diagnostics(itr)
+        self._new_completed_trajs = 0
+
+
+
+
